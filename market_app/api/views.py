@@ -1,18 +1,24 @@
 from rest_framework import generics
+from rest_framework.decorators import api_view, permission_classes
 from market_app.models import Manufacturer, Product, ManufacturerUser
 from .serializers import ManufacturerSerializer, ProductSerializer, ManufacturerUserSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from .permissions import IsStaffOrReadOnly
+from .permissions import IsStaffOrReadOnly, IsAdminForDeleteOrPatchAndReadOnly, IsOwnerOrAdmin
 # IsAdminForDeleteOrPatchAndReadOnly, IsOwnerOrAdmin     # später hinzufügen!
+
+
+
+#@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
 class ManufacturerList(generics.ListCreateAPIView):
     queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
-    permission_classes = [IsStaffOrReadOnly] #IsStaffOrReadOnly |    # später hinzufügen!
+    permission_classes = [IsStaffOrReadOnly | IsAuthenticated] # interne django Klasse, aber es sollte man mit decorator setzen, wie oben...
 
 class ManufacturerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
-    #permission_classes = [IsAdminForDeleteOrPatchAndReadOnly]      # später hinzufügen!
+    permission_classes = [IsAdminForDeleteOrPatchAndReadOnly]     
 
 
 class ProductList(generics.ListCreateAPIView):
@@ -32,7 +38,7 @@ class ManufacturerUserList(generics.ListCreateAPIView):
 class ManufacturerUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ManufacturerUser.objects.all()
     serializer_class = ManufacturerUserSerializer
-    #permission_classes = [IsOwnerOrAdmin]                           # später hinzufügen!
+    permission_classes = [IsOwnerOrAdmin]                           
 
 
 class ManufacturerProductListCreate(generics.ListCreateAPIView):
