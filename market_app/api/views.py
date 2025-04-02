@@ -13,8 +13,9 @@ from .permissions import IsStaffOrReadOnly, IsAdminForDeleteOrPatchAndReadOnly, 
 class ManufacturerList(generics.ListCreateAPIView):
     queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
-    permission_classes = [IsStaffOrReadOnly | IsAuthenticated] # interne django Klasse, aber es sollte man mit decorator setzen, wie oben...
-
+    permission_classes = [IsAuthenticated] # interne django Klasse, aber es sollte man mit decorator setzen, wie oben...
+    # IsStaffOrReadOnly |
+    
 class ManufacturerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Manufacturer.objects.all()
     serializer_class = ManufacturerSerializer
